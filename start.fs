@@ -21,7 +21,7 @@ require ./Gforth-Objects/double-linked-list.fs
 
 16 1 multi-cell-array heap-new constant board-test-array \ make the board test array
 : makeboard 16 0 do double-linked-list heap-new i board-test-array [bind] multi-cell-array cell-array! loop ;
-makeboard 
+makeboard
 \ make all the linked lists and put them in array
 
 : bta! { nboard-test-array-index nlistvalue -- } \ store nlistvalue into board-test-array index list
@@ -33,7 +33,7 @@ makeboard
   { nboard-test-array-index }
   0 ?do nboard-test-array-index swap bta! loop ;
 : bta@ ( nboard-test-array-index -- nboard-test-linked-list ) \ return the linked list for board test from board test array
-  [bind] multi-cell-array cell-array@ ;
+  board-test-array [bind] multi-cell-array cell-array@ ;
 
 1 4 5 3 0 nbta!
 0 2 4 5 6 5 1 nbta!
