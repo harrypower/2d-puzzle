@@ -15,7 +15,7 @@
 \
 \ Start of the 2d puzzle.  Need to start somewhere so here it is.
 
-require ./objects.fs
+require ./Gforth-Objects/objects.fs
 require ./Gforth-Objects/mdca-obj.fs
 require ./Gforth-Objects/double-linked-list.fs
 
