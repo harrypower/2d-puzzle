@@ -20,7 +20,10 @@ require ./Gforth-Objects/mdca-obj.fs
 require ./Gforth-Objects/double-linked-list.fs
 
 16 1 multi-cell-array heap-new constant board-test-array \ make the board test array
-16 0 [do] double-linked-list heap-new i board-test-array bind multi-cell-array cell-array! [loop] \ make all the linked list and put them in array
+: makeboard 16 0 do double-linked-list heap-new i board-test-array [bind] multi-cell-array cell-array! loop ;
+makeboard 
+\ make all the linked lists and put them in array
+
 : bta! { nboard-test-array-index nlistvalue -- } \ store nlistvalue into board-test-array index list
   nlistvalue
   nboard-test-array-index board-test-array cell-array@
