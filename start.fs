@@ -121,13 +121,24 @@ object class \
   m: ( npiece nindex aboard -- nflag ) \ store npiece on board nflag is false if npiece cannot be placed on board true if it can be placed
     { npiece nindex }
     nindex this board@ true = if
-      npiece nindex this btest true = if npiece nindex this board! true else false then 
+      npiece nindex this btest true = if npiece nindex this board! true else false then
     else false then
   ;m method boardput
 
   m: ( nindex aboard -- npiece ) \ retrieve npiece from board at nindex
     dup this board@ true = if this start@ else this board@ then
   ;m method boardget
+
+  m: ( nx ny aboard -- ) \ display current board
+    0 { nx ny nindex }
+    4 0 do
+      4 0 do
+        i 3 * nx +
+        j  ny + at-xy
+        nindex this boardget .
+      loop
+    loop
+  ;m method displayboard
 
   m: ( npiece nindex aboard -- nflag ) \ testing
     this btest
