@@ -20,8 +20,8 @@ require ./Gforth-Objects/mdca-obj.fs
 require ./Gforth-Objects/double-linked-list.fs
 
 16 1 multi-cell-array heap-new constant board-test-array \ make the board test array
-: makeboard 16 0 do double-linked-list heap-new i board-test-array [bind] multi-cell-array cell-array! loop ;
-makeboard
+: maketest 16 0 do double-linked-list heap-new i board-test-array [bind] multi-cell-array cell-array! loop ;
+maketest
 \ make all the linked lists and put them in array
 
 : bta! { nboard-test-array-index nlistvalue -- } \ store nlistvalue into board-test-array index list
@@ -77,6 +77,16 @@ object class \
   m: ( nindex aboard -- npiece ) \ rerieve npiece from nindex of start board
     board-start @ [bind] multi-cell-array cell-array@
   ;m method start@
+  m: ( npiece nindex aboard -- nflag ) \ test if npiece can be placed at nindex on board nflag is true if it can be placed.. false if cant be placed
+    { npiece nindex }
+    nindex this board@ npiece = if false
+    else
+      nindex bta@ [bind] double-linked-list ll-set-start
+      begin
+        nindex bta@ [bind] double-linked-list ll-cell@ npiece = if false true else nindex bta@ [bind] double-linked-list ll> false = if false else true true then then
+      until
+    then
+  ;m member btest
   public
   m: ( aboard -- )
     16 1 multi-cell-array heap-new board-array !
@@ -114,4 +124,8 @@ object class \
   m: ( nindex aboard -- npiece ) \ retrieve npiece from board at nindex
     dup this board@ true = if this start@ else this board@ then
   ;m method boardget
+
+  m: ( npiece nindex aboard -- nflag ) \ testing
+    this btest
+  ;m method btest?
 end-class aboard
