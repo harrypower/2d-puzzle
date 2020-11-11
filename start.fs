@@ -87,7 +87,7 @@ object class \
         npiece = if false true else nindex bta@ [bind] double-linked-list ll> false = if false else true true then then
       until
     then
-  ;m member btest
+  ;m method btest
   public
   m: ( aboard -- )
     16 1 multi-cell-array heap-new board-array !
