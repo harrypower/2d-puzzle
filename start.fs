@@ -119,7 +119,10 @@ object class \
   ;m overrides destruct
 
   m: ( npiece nindex aboard -- nflag ) \ store npiece on board nflag is false if npiece cannot be placed on board true if it can be placed
-    dup this board@ true = if this board! true else 2 drop false then
+    { npiece nindex }
+    nindex this board@ true = if
+      npiece nindex this btest true = if npiece nindex this board! true else false then 
+    else false then
   ;m method boardput
 
   m: ( nindex aboard -- npiece ) \ retrieve npiece from board at nindex
