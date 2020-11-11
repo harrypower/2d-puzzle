@@ -131,11 +131,13 @@ object class \
 
   m: ( nx ny aboard -- ) \ display current board
     0 { nx ny nindex }
+    page
     4 0 do
       4 0 do
         i 3 * nx +
         j  ny + at-xy
         nindex this boardget .
+        nindex 1 + to nindex 
       loop
     loop
   ;m method displayboard
