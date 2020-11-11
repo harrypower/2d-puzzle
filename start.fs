@@ -97,7 +97,7 @@ object class \
     0 13  this start!
     4 14  this start!
     1 15  this start!
-    16 0 do true i board! loop
+    16 0 do true i this board! loop
   ;m overrides construct
 
   m: ( -- )
