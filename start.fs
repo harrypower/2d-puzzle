@@ -79,11 +79,12 @@ object class \
   ;m method start@
   m: ( npiece nindex aboard -- nflag ) \ test if npiece can be placed at nindex on board nflag is true if it can be placed.. false if cant be placed
     { npiece nindex }
-    nindex this board@ npiece = if false
+    nindex this start@ npiece = if false
     else
       nindex bta@ [bind] double-linked-list ll-set-start
       begin
-        nindex bta@ [bind] double-linked-list ll-cell@ npiece = if false true else nindex bta@ [bind] double-linked-list ll> false = if false else true true then then
+        nindex bta@ [bind] double-linked-list ll-cell@ this start@
+        npiece = if false true else nindex bta@ [bind] double-linked-list ll> false = if false else true true then then
       until
     then
   ;m member btest
