@@ -54,7 +54,6 @@ makeboard
 \ this should be the complete board test data
 
 
-\\\
 [ifundef] destruction
   interface
      selector destruct ( object-name -- ) \ to free allocated memory in objects that use this
@@ -64,5 +63,55 @@ makeboard
 object class \
   destruction implementation
   protected
+  cell% inst-var board-array
+  cell% inst-var board-start
+  m: ( npiece nindex -- ) \ store npiece in board at nindex
+    board-array @ [bind] multi-cell-array cell-array!
+  ;m method board!
+  m: ( nindex -- npiece ) \ retreive npice from nindex of board
+    board-array @ [bind] multi-cell-array cell-array@
+  ;m method board@
+  m: ( npiece nindex -- ) \ store npiece in start board at nindex
+    board-start @ [bind] multi-cell-array cell-array!
+  ;m method start!
+  m: ( nindex -- npiece ) \ rerieve npiece from nindex of start board
+    board-start @ [bind] multi-cell-array cell-array@
+  ;m method start@
+  public
+  m: ( -- )
+    16 1 multi-cell-array heap-new board-array !
+    16 1 multi-cell-array heap-new board-start !
+    0 0  this start!
+    3 1  this start!
+    0 2  this start!
+    2 3  this start!
+    4 4  this start!
+    2 5  this start!
+    4 6  this start!
+    1 7  this start!
+    3 8  this start!
+    1 9  this start!
+    3 10 this start!
+    2 11  this start!
+    2 12  this start!
+    0 13  this start!
+    4 14  this start!
+    1 15  this start!
+    16 0 do true i board! loop
+  ;m overrides construct
 
-end-class
+  m: ( -- )
+    board-array @ [bind] multi-cell-array destruct
+    0 board-array !
+    board-start @ [bind] multi-cell-array destruct
+    0 board-start !
+  ;m overrides destruct
+
+  m: ( npiece nindex -- nflag ) \ store npiece on board nflag is false if npiece cannot be placed on board true if it can be placed
+    dup this board@ true if this board! true else 2 drop false then
+  ;m method boardput
+
+  m: ( nindex -- npiece ) \ retrieve npiece from board at nindex
+    dup this board@ true if this start@ else this board@ then
+  ;m method boardget
+end-class aboard
