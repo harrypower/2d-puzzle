@@ -65,20 +65,20 @@ object class \
   protected
   cell% inst-var board-array
   cell% inst-var board-start
-  m: ( npiece nindex -- ) \ store npiece in board at nindex
+  m: ( npiece nindex aboard -- ) \ store npiece in board at nindex
     board-array @ [bind] multi-cell-array cell-array!
   ;m method board!
-  m: ( nindex -- npiece ) \ retreive npice from nindex of board
+  m: ( nindex aboard -- npiece ) \ retreive npice from nindex of board
     board-array @ [bind] multi-cell-array cell-array@
   ;m method board@
-  m: ( npiece nindex -- ) \ store npiece in start board at nindex
+  m: ( npiece nindex aboard -- ) \ store npiece in start board at nindex
     board-start @ [bind] multi-cell-array cell-array!
   ;m method start!
-  m: ( nindex -- npiece ) \ rerieve npiece from nindex of start board
+  m: ( nindex aboard -- npiece ) \ rerieve npiece from nindex of start board
     board-start @ [bind] multi-cell-array cell-array@
   ;m method start@
   public
-  m: ( -- )
+  m: ( aboard -- )
     16 1 multi-cell-array heap-new board-array !
     16 1 multi-cell-array heap-new board-start !
     0 0  this start!
@@ -100,18 +100,18 @@ object class \
     16 0 do true i this board! loop
   ;m overrides construct
 
-  m: ( -- )
+  m: ( aboard -- )
     board-array @ [bind] multi-cell-array destruct
     0 board-array !
     board-start @ [bind] multi-cell-array destruct
     0 board-start !
   ;m overrides destruct
 
-  m: ( npiece nindex -- nflag ) \ store npiece on board nflag is false if npiece cannot be placed on board true if it can be placed
-    dup this board@ true if this board! true else 2 drop false then
+  m: ( npiece nindex aboard -- nflag ) \ store npiece on board nflag is false if npiece cannot be placed on board true if it can be placed
+    dup this board@ true = if this board! true else 2 drop false then
   ;m method boardput
 
-  m: ( nindex -- npiece ) \ retrieve npiece from board at nindex
-    dup this board@ true if this start@ else this board@ then
+  m: ( nindex aboard -- npiece ) \ retrieve npiece from board at nindex
+    dup this board@ true = if this start@ else this board@ then
   ;m method boardget
 end-class aboard
