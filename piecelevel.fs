@@ -26,14 +26,16 @@ require ./boardpieces.fs
   end-interface destruction
 [endif]
 
-Defer deferedpiecelvl ( naboard apiecelevel -- )
-
 object class \
-  destruction implementation
   protected
   cell% inst-var mainlist
   cell% inst-var piecelistarray
   cell% inst-var piecesfound
+end-class apiecelevel
+
+apiecelevel methods
+  destruction implementation
+  protected
   m: ( ndata apiecelevel -- ) \ store ndata in mainlist linked list
     mainlist @ [bind] double-linked-list ll-cell!
   ;m method mainlist!
@@ -52,26 +54,24 @@ object class \
     piecelistarray !
     piecelistarray @
   ;m method piece@
-  public
 
+  public
   m: ( naboard apiecelevel -- )
     double-linked-list heap-new mainlist !
     this mainlist! \ store the board that this piecelevel is based on
     0 piecesfound !
-
   ;m overrides construct
+
   m: ( apiecelevel -- )
     0 mainlist @ [bind] double-linked-list nll-cell@
     [bind] aboard destruct \ free up the board
     piecesfound 0 do i 1 + mainlist @ [bind] double-linked-list nll-cell@ piecelistarray !
-      2 piecelistarray @ [bind] multi-cell-array cell-array@ [bind] deferedpiecelvl destruct \ free piece level stored here
+      2 piecelistarray @ [bind] multi-cell-array cell-array@ [bind] apiecelevel destruct \ free piece level stored here
     loop
     piecesfound 0 do i 1 + mainlist @ [bind] double-linked-list nll-cell@ [bind] multi-cell-array destruct loop \ free piece data here
   ;m overrides destruct
 
-  m: ( apiecelevel -- ) \ with given board find all the pieces that can be placed 
+  m: ( apiecelevel -- ) \ with given board find all the pieces that can be placed
 
   ;m method findpieces
-end-class apiecelevel
-
-' apiecelevel is deferedpiecelvl
+end-methods
