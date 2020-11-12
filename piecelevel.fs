@@ -27,6 +27,7 @@ require ./boardpieces.fs
 [endif]
 
 object class \
+  destruction implementation
   protected
   cell% inst-var mainlist
   cell% inst-var piecelistarray
@@ -34,7 +35,6 @@ object class \
 end-class apiecelevel
 
 apiecelevel methods
-  destruction implementation
   protected
   m: ( ndata apiecelevel -- ) \ store ndata in mainlist linked list
     mainlist @ [bind] double-linked-list ll-cell!
