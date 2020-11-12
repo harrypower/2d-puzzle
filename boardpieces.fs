@@ -1,4 +1,4 @@
-\ start.fs
+\ boardpieces.fs
 \    Copyright (C) 2020 Philip K. Smith
 \    This program is free software: you can redistribute it and/or modify
 \    it under the terms of the GNU General Public License as published by
@@ -13,7 +13,7 @@
 \    You should have received a copy of the GNU General Public License
 \    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 \
-\ Start of the 2d puzzle.  Need to start somewhere so here it is.
+\ makes a board that also handles pieces 
 
 require ./Gforth-Objects/objects.fs
 require ./Gforth-Objects/mdca-obj.fs
