@@ -65,6 +65,7 @@ object class \
   protected
   cell% inst-var board-array
   cell% inst-var board-start
+  cell% inst-var piece-count-array
   m: ( npiece nindex aboard -- ) \ store npiece in board at nindex
     board-array @ [bind] multi-cell-array cell-array!
   ;m method board!
@@ -77,7 +78,25 @@ object class \
   m: ( nindex aboard -- npiece ) \ rerieve npiece from nindex of start board
     board-start @ [bind] multi-cell-array cell-array@
   ;m method start@
-  m: ( npiece nindex aboard -- nflag ) \ test if npiece can be placed at nindex on board nflag is true if it can be placed.. false if cant be placed
+  m: ( npiece aboard -- ) \ retreive piece count
+    piece-count-array @ [bind] multi-cell-array cell-array@
+  ;m method piece@
+  m: ( npiece aboard -- nflag ) \ test if npiece is at its limit for use
+    \ true returned if npiece can be added to
+    \ false returned if npiece can not be added to
+    { npiece }
+    npiece 4 = if npiece this piece@ 4 = then
+    npiece 4 < if npiece this piece@ 3 = then
+    invert
+  ;m method piece?
+  m: ( nqnt npiece aboard -- ) \ store nqnt into the piece array
+    piece-count-array @ [bind] multi-cell-array cell-array!
+  ;m method piece!
+  m: ( npiece aboard -- ) \ add a count to piece
+    dup this piece@ 1 + swap this piece!
+  ;m method piece+
+  m: ( npiece nindex aboard -- nflag ) \ test if npiece can be placed at nindex on board
+  \ nflag is true if it can be placed.. false if cannot be placed
     { npiece nindex }
     nindex this start@ npiece = if false
     else
@@ -86,12 +105,15 @@ object class \
         nindex bta@ [bind] double-linked-list ll-cell@ this start@
         npiece = if false true else nindex bta@ [bind] double-linked-list ll> false = if false else true true then then
       until
-    then
+    then \ test if the piece can be placed on board
+    npiece this piece?  \ test if the piece can even be used at all
+    and
   ;m method btest
   public
   m: ( aboard -- )
     16 1 multi-cell-array heap-new board-array !
     16 1 multi-cell-array heap-new board-start !
+    5 1 multi-cell-array heap-new piece-count-array !
     0 0  this start!
     3 1  this start!
     0 2  this start!
@@ -109,6 +131,7 @@ object class \
     4 14  this start!
     1 15  this start!
     16 0 do true i this board! loop
+    5 0 do 0 i this piece! loop
   ;m overrides construct
 
   m: ( aboard -- )
@@ -116,13 +139,21 @@ object class \
     0 board-array !
     board-start @ [bind] multi-cell-array destruct
     0 board-start !
+    piece-count-array @ [bind] multi-cell-array destruct
+    0 piece-count-array !
   ;m overrides destruct
+
+  m: ( npiece nindex aboard -- nflag ) \ test if npiece can be placed on board
+  \ nflag is false if npiece cannot be placed on board true if it can be placed
+    { npiece nindex }
+    nindex this board@ true = if
+      npiece nindex this btest
+    else false then
+  ;m method boardtest?
 
   m: ( npiece nindex aboard -- nflag ) \ store npiece on board nflag is false if npiece cannot be placed on board true if it can be placed
     { npiece nindex }
-    nindex this board@ true = if
-      npiece nindex this btest true = if npiece nindex this board! true else false then
-    else false then
+      npiece nindex this boardtest? true = if npiece nindex this board! npiece this piece+ true else false then
   ;m method boardput
 
   m: ( nindex aboard -- npiece ) \ retrieve npiece from board at nindex
@@ -137,7 +168,7 @@ object class \
         i 3 * nx +
         j  ny + at-xy
         nindex this boardget .
-        nindex 1 + to nindex 
+        nindex 1 + to nindex
       loop
     loop
   ;m method displayboard
