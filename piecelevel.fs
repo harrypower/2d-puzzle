@@ -59,20 +59,6 @@ object class \
       true true \ true is returned because there are no pieces or board indexs to return
     then
   ;m method piece@
-
-  public
-  m: ( naboard apiecelevel -- )
-    theboard ! \ store the board handle
-    double-linked-list heap-new mainlist !
-    0 piecesfound !
-  ;m overrides construct
-
-  m: ( apiecelevel -- )
-    theboard @ [bind] aboard destruct \ free up the board
-    piecesfound 0 do i mainlist @ [bind] double-linked-list nll-cell@ [bind] multi-cell-array destruct loop \ free piece data here
-    mainlist @ [bind] double-linked-list destruct \ free up list
-  ;m overrides destruct
-
   m: ( apiecelevel -- ) \ with given board find all the pieces that can be placed
     16 0 do
       5 0 do
@@ -83,6 +69,23 @@ object class \
     loop
   ;m method findpieces
 
+  public
+  m: ( naboard apiecelevel -- )
+    theboard ! \ store the board handle
+    double-linked-list heap-new mainlist !
+    0 piecesfound !
+    this findpieces
+  ;m overrides construct
+
+  m: ( apiecelevel -- )
+    theboard @ [bind] aboard destruct \ free up the board
+    piecesfound 0 do i mainlist @ [bind] double-linked-list nll-cell@ [bind] multi-cell-array destruct loop \ free piece data here
+    mainlist @ [bind] double-linked-list destruct \ free up list
+    0 mainlist !
+    0 piecesfound !
+    0 theboard !
+  ;m overrides destruct
+
   m: ( apiecelevel -- npiecesfound ) \ return total pieces found
     piecesfound @
   ;m method piecesfound?
@@ -90,4 +93,8 @@ object class \
   m: ( uindex apiecelevel -- nboardindex npiece# ) \ for given uindex return nboardindex npiece#
     this piece@
   ;m method thepieces@
+
+  m: ( uboardindex apiecelevel -- naboard ) \ returns the board object used in this piece level object
+    theboard @
+  ;m method theboard@
 end-class apiecelevel
