@@ -32,14 +32,16 @@ object class \
   cell% inst-var mainlist
   cell% inst-var piecelistarray
   cell% inst-var piecesfound
+  cell% inst-var theboard
 
   protected
   m: ( ndata apiecelevel -- ) \ store ndata in mainlist linked list
     mainlist @ [bind] double-linked-list ll-cell!
   ;m method mainlist!
-  m: ( apiecelevel -- ndata nflag ) \ retrieve ndata from mainlist ... nflag is true
+  m: ( uindex apiecelevel -- ndata ) \ retrieve ndata from mainlist at nindex ...
+    mainlist @ [bind] double-linked-list nll-cell@
   ;m method mainlist@
-  m: ( nboardindex npiece# apiecelevel -- ) \ create and store piece list data
+  m: ( uboardindex npiece# apiecelevel -- ) \ create and store piece list data
     2 1 multi-cell-array heap-new piecelistarray !
     piecelistarray @ this mainlist!
     1 piecelistarray @ [bind] multi-cell-array cell-array! \ store npiece# in piecelistarray that is furthor stored in the mainlist
@@ -47,24 +49,45 @@ object class \
     piecesfound @ 1 + piecesfound ! \ add to pieces found
   ;m method piece+
   m: ( npiecelistarray apiecelevel -- nboardindex npiece# ) \ return board piece level data from npiecelistarray
-    piecelistarray !
-    piecelistarray @
+  \ note this will return true true for meaning no piece or boardindex to return
+    piecesfound @ 0 > if
+      this mainlist@
+      piecelistarray !
+      0 piecelistarray @ [bind] multi-cell-array cell-array@ \ retrieve nboardindex
+      1 piecelistarray @ [bind] multi-cell-array cell-array@ \ retrieve npiece#
+    else
+      true true \ true is returned because there are no pieces or board indexs to return
+    then
   ;m method piece@
 
   public
   m: ( naboard apiecelevel -- )
+    theboard ! \ store the board handle
     double-linked-list heap-new mainlist !
-    this mainlist! \ store the board that this piecelevel is based on
     0 piecesfound !
   ;m overrides construct
 
   m: ( apiecelevel -- )
-    0 mainlist @ [bind] double-linked-list nll-cell@ [bind] aboard destruct \ free up the board
-    piecesfound 0 do i 1 + mainlist @ [bind] double-linked-list nll-cell@ [bind] multi-cell-array destruct loop \ free piece data here
-    mainlist @ [bind] double-linked-list destruct \ free up list 
+    theboard @ [bind] aboard destruct \ free up the board
+    piecesfound 0 do i mainlist @ [bind] double-linked-list nll-cell@ [bind] multi-cell-array destruct loop \ free piece data here
+    mainlist @ [bind] double-linked-list destruct \ free up list
   ;m overrides destruct
 
   m: ( apiecelevel -- ) \ with given board find all the pieces that can be placed
-
+    16 0 do
+      5 0 do
+        i j \ npiece nindex
+        theboard @  \ get the stored board to work with
+        [bind] aboard boardtest? if j i this piece+ then \ store uboardindex upiece#
+      loop
+    loop
   ;m method findpieces
+
+  m: ( apiecelevel -- npiecesfound ) \ return total pieces found
+    piecesfound @
+  ;m method piecesfound?
+
+  m: ( uindex apiecelevel -- nboardindex npiece# ) \ for given uindex return nboardindex npiece#
+    this piece@
+  ;m method thepieces@
 end-class apiecelevel
