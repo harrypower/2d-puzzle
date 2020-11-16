@@ -20,4 +20,38 @@ require ./Gforth-Objects/mdca-obj.fs
 require ./Gforth-Objects/double-linked-list.fs
 require ./piecelevel.fs
 
-16 2 2 multi-cell-array heap-new constant solutionarray
+16 2 2 multi-cell-array heap-new constant solutionarray  ( apiecelevel , solutionindex )
+
+: startsolutionarray ( -- ) \ start solution array empty
+  16 0 do
+    0 i 0 solutionarray cell-array!    \ store no board object
+    true i 0 solutionarray cell-array!  \ store no index
+  loop ;
+startsolutionarray
+aboard heap-new apiecelevel heap-new 0 0 solutionarray cell-array! \ place beginning piecelevel at index 0
+0 0 1 solutionarray cell-array! \ start at first piece
+
+0 value solutionedge \ this is the current location where solution is at
+0 value scratchindex
+: getNboard ( nsolutionindex -- aboard )
+  0 solutionarray cell-array@ theboard@ ;
+: getNpieceindex ( nsolutionindex -- npiece nindex )
+  dup 1 solutionarray cell-array@
+  swap 0 solutionarray cell-array@ thepieces@ swap
+  ;
+
+: solutionboard@ ( -- aboard nflag ) \ return aboard such that it contains current solution moves
+\ nflag is true if aboard is contains current solution
+\ nflag is false if the current solution is not valid 
+  solutionedge getNpieceindex ( -- npiece nindex )
+  drop true <> if
+    aboard heap-new \ start with empty board then add the current solution pieces
+    solutionedge 0 ?do
+      dup i getNpieceindex swap rot boardput drop \ add pieces up to solutionedge
+    loop
+    dup solutionedge getNpieceindex swap rot boardput drop \ add the solutionedge piece
+    true \ ( -- aboard true )
+  else
+    false false
+  then
+;

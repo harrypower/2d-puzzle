@@ -49,7 +49,7 @@ object class \
     piecesfound @ 1 + piecesfound ! \ add to pieces found
   ;m method piece+
   m: ( npiecelistarray apiecelevel -- nboardindex npiece# ) \ return board piece level data from npiecelistarray
-  \ note this will return true true for meaning no piece or boardindex to return
+  \ note this can return true true ... meaning no piece or boardindex to return
     piecesfound @ 0 > if
       this mainlist@
       piecelistarray !
@@ -90,11 +90,11 @@ object class \
     piecesfound @
   ;m method piecesfound?
 
-  m: ( uindex apiecelevel -- nboardindex npiece# ) \ for given uindex return nboardindex npiece#
+  m: ( uindex apiecelevel -- nboardindex npiece# ) \ for given uindex return nboardindex npiece# that can be placed on theboard
     this piece@
   ;m method thepieces@
 
-  m: ( uboardindex apiecelevel -- naboard ) \ returns the board object used in this piece level object
+  m: ( apiecelevel -- naboard ) \ returns the board object used in this piece level object
     theboard @
   ;m method theboard@
 end-class apiecelevel
