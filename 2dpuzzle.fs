@@ -47,9 +47,9 @@ aboard heap-new apiecelevel heap-new 0 0 solutionarray cell-array! \ place begin
   drop true <> if
     aboard heap-new \ start with empty board then add the current solution pieces
     solutionedge 0 ?do
-      dup i getNpieceindex swap rot boardput . cr \ add pieces up to solutionedge
+      dup i getNpieceindex rot boardput  \ add pieces up to solutionedge
     loop
-    dup solutionedge getNpieceindex swap rot boardput . cr \ add the solutionedge piece
+    dup solutionedge getNpieceindex rot boardput \ add the solutionedge piece
     true \ ( -- aboard true )
   else
     false false
