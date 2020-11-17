@@ -64,6 +64,6 @@ aboard heap-new apiecelevel heap-new 0 0 solutionarray cell-array! \ place begin
     dup piecesfound? 0 > if solutionarray! true
      else dup [bind] apiecelevel destruct free throw true then
   else
-    dup [bind] aboard destruct free thow
+    dup [bind] aboard destruct free throw
     true
   then ;
