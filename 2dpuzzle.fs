@@ -33,14 +33,13 @@ aboard heap-new apiecelevel heap-new 0 0 solutionarray cell-array! \ place begin
 
 0 value solutionedge \ this is the current location where solution is at
 0 value scratchindex
-: getNboard ( nsolutionindex -- aboard )
+: getNboard ( nsolutionindex -- uaboard )
   0 solutionarray cell-array@ theboard@ ;
 : getNpieceindex ( nsolutionindex -- npiece nindex )
   dup 1 solutionarray cell-array@
-  swap 0 solutionarray cell-array@ thepieces@ swap
-  ;
+  swap 0 solutionarray cell-array@ thepieces@ swap ;
 
-: solutionboard@ ( -- aboard nflag ) \ return aboard such that it contains current solution moves
+: solutionboard@ ( -- uaboard nflag ) \ return aboard such that it contains current solution moves
 \ nflag is true if aboard is contains current solution
 \ nflag is false if the current solution is not valid
   solutionedge getNpieceindex ( -- npiece nindex )
@@ -52,5 +51,19 @@ aboard heap-new apiecelevel heap-new 0 0 solutionarray cell-array! \ place begin
     dup solutionedge getNpieceindex rot boardput \ add the solutionedge piece ( -- aboard true )
   else
     false false
-  then
-;
+  then ;
+
+: solutionarray! ( napiecelevel -- ) \ store apiecelevel to solutionarray and start at piece 0 update solutionedge index value
+  solutionedge 1 + dup to solutionedge
+  0 solutionarray cell-array! \ store napiecelevel object
+  0 solutionedge 1 cell-array! ; \ start with piece 0 from napicelevel object
+
+: addnextlvl ( -- nflag ) \ create and store next piecelevel ... nflag is true for next lvl added nflag is false if no lvl found and non added
+  solutionboard@ if
+    apiecelevel heap-new
+    dup piecesfound? 0 > if solutionadd true
+     else dup [bind] apiecelevel destruct free throw true then
+  else
+    dup [bind] aboard destruct free thow
+    true
+  then ;
