@@ -32,7 +32,6 @@ aboard heap-new apiecelevel heap-new 0 0 solutionarray cell-array! \ place begin
 0 0 1 solutionarray cell-array! \ start at first piece
 
 0 value solutionedge \ this is the current location where solution is at
-0 value scratchindex
 : getNboard ( nsolutionindex -- uaboard )
   0 solutionarray cell-array@ theboard@ ;
 : getNpieceindex ( nsolutionindex -- npiece nindex )
