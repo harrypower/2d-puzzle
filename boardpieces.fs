@@ -13,7 +13,7 @@
 \    You should have received a copy of the GNU General Public License
 \    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 \
-\ makes a board that also handles pieces 
+\ makes a board that also handles pieces
 
 require ./Gforth-Objects/objects.fs
 require ./Gforth-Objects/mdca-obj.fs
@@ -162,7 +162,7 @@ object class \
 
   m: ( nx ny aboard -- ) \ display current board
     0 { nx ny nindex }
-    page
+    \ page
     4 0 do
       4 0 do
         i 3 * nx +
