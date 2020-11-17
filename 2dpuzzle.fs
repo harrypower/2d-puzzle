@@ -42,14 +42,14 @@ aboard heap-new apiecelevel heap-new 0 0 solutionarray cell-array! \ place begin
 
 : solutionboard@ ( -- aboard nflag ) \ return aboard such that it contains current solution moves
 \ nflag is true if aboard is contains current solution
-\ nflag is false if the current solution is not valid 
+\ nflag is false if the current solution is not valid
   solutionedge getNpieceindex ( -- npiece nindex )
   drop true <> if
     aboard heap-new \ start with empty board then add the current solution pieces
     solutionedge 0 ?do
-      dup i getNpieceindex swap rot boardput drop \ add pieces up to solutionedge
+      dup i getNpieceindex swap rot boardput . cr \ add pieces up to solutionedge
     loop
-    dup solutionedge getNpieceindex swap rot boardput drop \ add the solutionedge piece
+    dup solutionedge getNpieceindex swap rot boardput . cr \ add the solutionedge piece
     true \ ( -- aboard true )
   else
     false false
