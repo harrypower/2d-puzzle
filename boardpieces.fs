@@ -99,18 +99,21 @@ object class \
   m: ( npiece nindex aboard -- nflag ) \ test if npiece can be placed at nindex on board
   \ nflag is true if it can be placed.. false if cannot be placed
     { npiece nindex }
-    nindex this start@ npiece = if false
+    nindex this start@ npiece = if false \ test if npiece is same as base piece then npiced cannot be placed
     else
       nindex bta@ [bind] double-linked-list ll-set-start
       begin
         nindex this board@ true = if \ if there is a piece on board use it rather then the base board piece
           nindex bta@ [bind] double-linked-list ll-cell@ this start@
+          .s ." start@" cr
         else
           nindex bta@ [bind] double-linked-list ll-cell@ this board@
+          .s ." board@" cr
         then
         npiece = if false true else nindex bta@ [bind] double-linked-list ll> false = if false else true true then then
       until
     then \ test if the piece can be placed on board
+    .s ." before piece? test" cr 
     npiece this piece?  \ test if the piece can even be used at all
     and
   ;m method btest
@@ -153,7 +156,6 @@ object class \
     { npiece nindex }
     nindex this board@ true = if \ test if a piece has been placed then another piece can not be placed
       npiece nindex this btest  \ ( -- nflag ) now test if the piece can be placed on the base board
-      \ need code here to test if npiece nindex can be placed against other pieces place..
     else false then
   ;m method boardtest?
 
