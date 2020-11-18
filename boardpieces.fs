@@ -103,17 +103,12 @@ object class \
     else
       nindex bta@ [bind] double-linked-list ll-set-start
       begin
-        nindex this board@ true = if \ if there is a piece on board use it rather then the base board piece
-          nindex bta@ [bind] double-linked-list ll-cell@ this start@
-          .s ." start@" cr
-        else
-          nindex bta@ [bind] double-linked-list ll-cell@ this board@
-          .s ." board@" cr
-        then
+        nindex bta@ [bind] double-linked-list ll-cell@ dup this board@ true = if this start@ else this board@ then 
+        .s ." piece going into test from board" cr
         npiece = if false true else nindex bta@ [bind] double-linked-list ll> false = if false else true true then then
       until
     then \ test if the piece can be placed on board
-    .s ." before piece? test" cr 
+    .s ." before piece? test" cr
     npiece this piece?  \ test if the piece can even be used at all
     and
   ;m method btest
