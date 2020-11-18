@@ -62,10 +62,11 @@ maketest
 
 object class \
   destruction implementation
-  protected
+  \ protected
   cell% inst-var board-array
   cell% inst-var board-start
   cell% inst-var piece-count-array
+  public
   m: ( npiece nindex aboard -- ) \ store npiece in board at nindex
     board-array @ [bind] multi-cell-array cell-array!
   ;m method board!
@@ -102,7 +103,7 @@ object class \
     else
       nindex bta@ [bind] double-linked-list ll-set-start
       begin
-        nindex this board@ true = if \ if there is a piece on board use it rather then the base board piece 
+        nindex this board@ true = if \ if there is a piece on board use it rather then the base board piece
           nindex bta@ [bind] double-linked-list ll-cell@ this start@
         else
           nindex bta@ [bind] double-linked-list ll-cell@ this board@
