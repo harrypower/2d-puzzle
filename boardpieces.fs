@@ -62,11 +62,11 @@ maketest
 
 object class \
   destruction implementation
-  \ protected
+  protected
   cell% inst-var board-array
   cell% inst-var board-start
   cell% inst-var piece-count-array
-  public
+  \ public
   m: ( npiece nindex aboard -- ) \ store npiece in board at nindex
     board-array @ [bind] multi-cell-array cell-array!
   ;m method board!
@@ -103,12 +103,10 @@ object class \
     else
       nindex bta@ [bind] double-linked-list ll-set-start
       begin
-        nindex bta@ [bind] double-linked-list ll-cell@ dup this board@ true = if this start@ else this board@ then 
-        .s ." piece going into test from board" cr
+        nindex bta@ [bind] double-linked-list ll-cell@ dup this board@ true = if this start@ else this board@ then
         npiece = if false true else nindex bta@ [bind] double-linked-list ll> false = if false else true true then then
       until
     then \ test if the piece can be placed on board
-    .s ." before piece? test" cr
     npiece this piece?  \ test if the piece can even be used at all
     and
   ;m method btest
