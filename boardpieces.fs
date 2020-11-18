@@ -69,7 +69,7 @@ object class \
   m: ( npiece nindex aboard -- ) \ store npiece in board at nindex
     board-array @ [bind] multi-cell-array cell-array!
   ;m method board!
-  m: ( nindex aboard -- npiece ) \ retreive npice from nindex of board
+  m: ( nindex aboard -- npiece ) \ retreive npiece from nindex of board
     board-array @ [bind] multi-cell-array cell-array@
   ;m method board@
   m: ( npiece nindex aboard -- ) \ store npiece in start board at nindex
@@ -102,7 +102,11 @@ object class \
     else
       nindex bta@ [bind] double-linked-list ll-set-start
       begin
-        nindex bta@ [bind] double-linked-list ll-cell@ this start@
+        nindex this board@ true = if \ if there is a piece on board use it rather then the base board piece 
+          nindex bta@ [bind] double-linked-list ll-cell@ this start@
+        else
+          nindex bta@ [bind] double-linked-list ll-cell@ this board@
+        then
         npiece = if false true else nindex bta@ [bind] double-linked-list ll> false = if false else true true then then
       until
     then \ test if the piece can be placed on board
@@ -146,8 +150,9 @@ object class \
   m: ( npiece nindex aboard -- nflag ) \ test if npiece can be placed on board
   \ nflag is false if npiece cannot be placed on board true if it can be placed
     { npiece nindex }
-    nindex this board@ true = if
-      npiece nindex this btest
+    nindex this board@ true = if \ test if a piece has been placed then another piece can not be placed
+      npiece nindex this btest  \ ( -- nflag ) now test if the piece can be placed on the base board
+      \ need code here to test if npiece nindex can be placed against other pieces place..
     else false then
   ;m method boardtest?
 
