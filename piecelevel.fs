@@ -79,7 +79,7 @@ object class \
 
   m: ( apiecelevel -- )
     theboard @ [bind] aboard destruct \ free up the board
-    piecesfound 0 do? i mainlist @ [bind] double-linked-list nll-cell@ [bind] multi-cell-array destruct loop \ free piece data here
+    piecesfound 0 ?do i mainlist @ [bind] double-linked-list nll-cell@ [bind] multi-cell-array destruct loop \ free piece data here
     mainlist @ [bind] double-linked-list destruct \ free up list
     0 mainlist !
     0 piecesfound !
