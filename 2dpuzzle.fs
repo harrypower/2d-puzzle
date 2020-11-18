@@ -47,7 +47,7 @@ aboard heap-new apiecelevel heap-new 0 0 solutionarray cell-array! \ place begin
     solutionedge 0 ?do
       dup i getNpieceindex rot boardput drop \ add pieces up to solutionedge
     loop
-    dup solutionedge getNpieceindex rot boardput \ add the solutionedge piece ( -- aboard true )
+    dup solutionedge getNpieceindex rot boardput \ add the solutionedge piece ( -- aboard nflag )  note nflag should be true always
   else
     false false
   then ;
@@ -60,9 +60,9 @@ aboard heap-new apiecelevel heap-new 0 0 solutionarray cell-array! \ place begin
 : addnextlvl ( -- nflag ) \ create and store next piecelevel ... nflag is true for next lvl added nflag is false if no lvl found and non added
   solutionboard@ if
     apiecelevel heap-new
-    dup piecesfound? 0 > if solutionarray! true
-     else dup [bind] apiecelevel destruct free throw true then
+    dup piecesfound? 0 > if solutionarray! true \ a piece found for next level so stort it in solutionarray
+     else dup [bind] apiecelevel destruct free throw false then \ no next level found so destruct apiecelevel that was constructed earlier 
   else
-    dup [bind] aboard destruct free throw
-    true
+      dup false <> if [bind] aboard destruct free throw then \ if aboard returned by solutionboard@ is present destruct it here
+      false
   then ;
