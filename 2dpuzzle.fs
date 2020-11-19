@@ -25,7 +25,7 @@ require ./piecelevel.fs
 : startsolutionarray ( -- ) \ start solution array empty
   16 0 do
     0 i 0 solutionarray cell-array!    \ store no board object
-    true i 0 solutionarray cell-array!  \ store no index
+    true i 1 solutionarray cell-array!  \ store no index
   loop ;
 startsolutionarray
 aboard heap-new apiecelevel heap-new 0 0 solutionarray cell-array! \ place beginning piecelevel at index 0
@@ -61,8 +61,12 @@ aboard heap-new apiecelevel heap-new 0 0 solutionarray cell-array! \ place begin
   solutionboard@ if
     apiecelevel heap-new
     dup piecesfound? 0 > if solutionarray! true \ a piece found for next level so stort it in solutionarray
-     else dup [bind] apiecelevel destruct free throw false then \ no next level found so destruct apiecelevel that was constructed earlier 
+     else dup [bind] apiecelevel destruct free throw false then \ no next level found so destruct apiecelevel that was constructed earlier
   else
       dup false <> if [bind] aboard destruct free throw then \ if aboard returned by solutionboard@ is present destruct it here
       false
   then ;
+
+: backuplvl ( -- nflag ) \ backup on level from current solution ... nflag is true if backup to another solution works false if no more solutions on this lvl
+
+;
