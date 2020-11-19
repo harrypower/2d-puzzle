@@ -22,23 +22,30 @@ require ./piecelevel.fs
 
 16 2 2 multi-cell-array heap-new constant solutionarray  ( apiecelevel , solutionindex )
 
-: startsolutionarray ( -- ) \ start solution array empty
-  16 0 do
+: startsolutionarray ( uindex -- ) \ empty solutionarray from uindex to end of array
+  16 swap do
     0 i 0 solutionarray cell-array!    \ store no board object
     true i 1 solutionarray cell-array!  \ store no index
   loop ;
-startsolutionarray
+0 startsolutionarray
 aboard heap-new apiecelevel heap-new 0 0 solutionarray cell-array! \ place beginning piecelevel at index 0
 0 0 1 solutionarray cell-array! \ start at first piece
 
 0 value solutionedge \ this is the current location where solution is at
-: getNboard ( nsolutionindex -- uaboard )
+: getNboard ( nsolutionindex -- uaboard ) \ return uaboard for a given usolutionindex level
   0 solutionarray cell-array@ theboard@ ;
-: getNpieceindex ( nsolutionindex -- npiece nindex )
-  dup 1 solutionarray cell-array@
+: gettotallvlsolutions ( nsolutionindex -- usoluionstotal ) \ return usoluionstotal on a given nsolutionindex level
+  0 solutionarray cell-array@ piecesfound? ;
+: getcurrentlvlsolution# ( nsolutionindex -- ucurrentsolution# ) \ return the current solution # working on for nsolutionindex
+  1 solutionarray cell-array@ ;
+: addtocurrentlvlsolution# ( nsolutionindex -- ) \ add 1 to nsolutionindex solutionindex value so getNpieceindex will return next lvl solution
+  dup getcurrentlvlsolution# 1 +
+  swap 1 solutionarray cell-array! ;
+: getNpieceindex ( nsolutionindex -- npiece nindex ) \ return niece nindex at nsolutionindex solutionlevel note this will only get next npiece nindex if there are more solutions at this lvl only
+  dup 1 getcurrentlvlsolution# \ ( nsolutionindex nlvlsolutionfornsolutionindex )
   swap 0 solutionarray cell-array@ thepieces@ swap ;
 
-: solutionboard@ ( -- uaboard nflag ) \ return aboard such that it contains current solution move
+: solutionboard@ ( -- uaboard nflag ) \ return new aboard such that it contains current solution move
 \ nflag is true if aboard contains current solution
 \ nflag is false if the current solution is not valid
   solutionedge getNpieceindex ( -- npiece nindex )
@@ -68,5 +75,18 @@ aboard heap-new apiecelevel heap-new 0 0 solutionarray cell-array! \ place begin
   then ;
 
 : backuplvl ( -- nflag ) \ backup on level from current solution ... nflag is true if backup to another solution works false if no more solutions on this lvl
-
-;
+  solutionedge gettotallvlsolutions
+  solutionedge getcurrentlvlsolution# 1 + <> if \ current solution on this solutionedge lvl is not at end yet so stay at lvl and advance solution
+    solutionedge 1 + startsolutionarray \ ensuring solutionarray past edge is empty ... note a memory leak might happen here need to look into
+    solutionedge addtocurrentlvlsolution# true
+  else \ current solution on this solutionedge lvl is at end so back up one lvl
+    \ now check if at last solution lvl ..
+    solutionedge 0 <> if \ if on any lvl other then 0 drop that level and clean up and return true
+      solutionedge 0 solutionarray cell-array@ [bind] apiecelevel destruct
+      solutionedge startsolutionarray \ ensuring solutionarray past edge is empty ... note a memory leak might happen here need to look into
+      solutionedge 1 - to solutionedge
+      true 
+    else \ if on lvl 0 then there is no soluiton to puzzle return false
+      false
+    then
+  then ;
