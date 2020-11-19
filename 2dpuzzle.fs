@@ -74,19 +74,31 @@ aboard heap-new apiecelevel heap-new 0 0 solutionarray cell-array! \ place begin
       false
   then ;
 
-: backuplvl ( -- nflag ) \ backup on level from current solution ... nflag is true if backup to another solution works false if no more solutions on this lvl
+: incsolution ( -- nflag ) \ increment solutionedge solutions ... nflag is true if increment works nflag is false if no more solutions on lvl
   solutionedge gettotallvlsolutions
   solutionedge getcurrentlvlsolution# 1 + <> if \ current solution on this solutionedge lvl is not at end yet so stay at lvl and advance solution
-    solutionedge 1 + startsolutionarray \ ensuring solutionarray past edge is empty ... note a memory leak might happen here need to look into
     solutionedge addtocurrentlvlsolution# true
-  else \ current solution on this solutionedge lvl is at end so back up one lvl
-    \ now check if at last solution lvl ..
-    solutionedge 0 <> if \ if on any lvl other then 0 drop that level and clean up and return true
-      solutionedge 0 solutionarray cell-array@ [bind] apiecelevel destruct
-      solutionedge startsolutionarray \ ensuring solutionarray past edge is empty ... note a memory leak might happen here need to look into
-      solutionedge 1 - to solutionedge
-      true
-    else \ if on lvl 0 then there is no soluiton to puzzle return false
+  else false then ;
+
+: decsolutionindex ( -- nflag ) \ decriment solutionedge but clean up memory before .. if at 0 for solutionedge then return false else return true
+  solutionedge 0 <> if \ if on any lvl other then 0 drop that level and clean up and return true
+    solutionedge 0 solutionarray cell-array@ [bind] apiecelevel destruct
+    solutionedge startsolutionarray \ ensuring solutionarray past edge is empty ... note a memory leak might happen here need to look into
+    solutionedge 1 - to solutionedge
+    true
+  else \ if on lvl 0 then there is no soluiton to puzzle return false
+    false
+  then
+
+;
+
+: backuplvl ( -- nflag ) \ backup on level from current solution ... nflag is true if backup to another solution works false if no more solutions on this lvl
+  incsolution false = if
+    decsolutionindex false = if \ there is no solution return false
       false
+    else \ lvl was decrimented now test if this lvl has anymore solutions
+      incsolution false = if
+        false \ no more solutions done
+      else true then \ there is at least one more solution at this lvl  
     then
-  then ;
+  else true then ;
