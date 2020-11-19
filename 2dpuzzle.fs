@@ -88,17 +88,14 @@ aboard heap-new apiecelevel heap-new 0 0 solutionarray cell-array! \ place begin
     true
   else \ if on lvl 0 then there is no soluiton to puzzle return false
     false
-  then
-
-;
+  then ;
 
 : backuplvl ( -- nflag ) \ backup on level from current solution ... nflag is true if backup to another solution works false if no more solutions on this lvl
+  recursive
   incsolution false = if
     decsolutionindex false = if \ there is no solution return false
       false
     else \ lvl was decrimented now test if this lvl has anymore solutions
-      incsolution false = if
-        false \ no more solutions done
-      else true then \ there is at least one more solution at this lvl  
+      backuplvl
     then
   else true then ;
