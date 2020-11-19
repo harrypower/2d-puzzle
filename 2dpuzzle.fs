@@ -42,7 +42,7 @@ aboard heap-new apiecelevel heap-new 0 0 solutionarray cell-array! \ place begin
   dup getcurrentlvlsolution# 1 +
   swap 1 solutionarray cell-array! ;
 : getNpieceindex ( nsolutionindex -- npiece nindex ) \ return niece nindex at nsolutionindex solutionlevel note this will only get next npiece nindex if there are more solutions at this lvl only
-  dup 1 getcurrentlvlsolution# \ ( nsolutionindex nlvlsolutionfornsolutionindex )
+  dup getcurrentlvlsolution# \ ( nsolutionindex nlvlsolutionfornsolutionindex )
   swap 0 solutionarray cell-array@ thepieces@ swap ;
 
 : solutionboard@ ( -- uaboard nflag ) \ return new aboard such that it contains current solution move
@@ -85,7 +85,7 @@ aboard heap-new apiecelevel heap-new 0 0 solutionarray cell-array! \ place begin
       solutionedge 0 solutionarray cell-array@ [bind] apiecelevel destruct
       solutionedge startsolutionarray \ ensuring solutionarray past edge is empty ... note a memory leak might happen here need to look into
       solutionedge 1 - to solutionedge
-      true 
+      true
     else \ if on lvl 0 then there is no soluiton to puzzle return false
       false
     then
