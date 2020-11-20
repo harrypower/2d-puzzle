@@ -99,3 +99,21 @@ aboard heap-new apiecelevel heap-new 0 0 solutionarray cell-array! \ place begin
       backuplvl
     then
   else true then ;
+
+: solveit ( -- )
+  begin
+    begin
+      solutionedge 15 >= if
+        true
+      else
+        addnextlvl invert
+      then
+    until
+    0 0 page solutionedge getNboard displayboard
+    0 5 at-xy solutionedge . ." pieces for current solution" cr
+    solutionedge 15 >= if
+      false
+    else
+      backuplvl ( -- nflag )
+    then
+  until ;
