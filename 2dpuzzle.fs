@@ -101,6 +101,19 @@ aboard heap-new apiecelevel heap-new 0 0 solutionarray cell-array! \ place begin
   else true then ;
 
 0 value solutionmax
+5 value displayskip
+0 value displaystep
+: displayit ( -- )
+displaystep 1 + to displaystep
+displaystep displayskip > solutionedge 15 >= or if
+  0 to displaystep
+  0 0 page solutionedge getNboard displayboard
+  0 5 at-xy solutionedge . ." pieces for current solution" cr
+  solutionedge solutionmax max to solutionmax
+  solutionmax . ." current max solutions found" cr
+  0 getcurrentlvlsolution# . ." how deep into first lvl"
+then ;
+
 : solveit ( -- )
   begin
     begin
@@ -110,11 +123,7 @@ aboard heap-new apiecelevel heap-new 0 0 solutionarray cell-array! \ place begin
         addnextlvl invert
       then
     until
-    0 0 page solutionedge getNboard displayboard
-    0 5 at-xy solutionedge . ." pieces for current solution" cr
-    solutionedge solutionmax max to solutionmax
-    solutionmax . ." current max solutions found" cr
-    0 getcurrentlvlsolution# . ." how deep into first lvl"
+    displayit
     solutionedge 15 >= if
       true
     else
