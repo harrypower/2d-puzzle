@@ -135,9 +135,10 @@ then ;
   until ;
 
 : addsolution ( -- ) \ get current solution and add it to solutionslist
-  16 2 2 multi-cell-array heap-new { ustorage } \ ( npiece , nindex )
+  16 2 2 multi-cell-array heap-new { ustorage } \ ( npiece , nindex ) < this will be how the solution data is stored in array 
   ustorage solutionslist ll-cell! \ store the array that will contain the pieces for solution
-  16 0 do
+  16 0 do true i 0 ustorage cell-array! true i 1 ustorage cell-array! loop \ empty solution list first
+  solutionedge 1 + 0 do
     i getNpieceindex i 1 ustorage cell-array! i 0 ustorage cell-array!
   loop
   solutions 1 + to solutions ;
