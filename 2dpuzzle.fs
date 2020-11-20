@@ -112,8 +112,8 @@ aboard heap-new apiecelevel heap-new 0 0 solutionarray cell-array! \ place begin
     0 0 page solutionedge getNboard displayboard
     0 5 at-xy solutionedge . ." pieces for current solution" cr
     solutionedge 15 >= if
-      false
+      true
     else
-      backuplvl ( -- nflag )
+      backuplvl invert 
     then
   until ;
