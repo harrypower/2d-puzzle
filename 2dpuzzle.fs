@@ -20,7 +20,8 @@ require ./Gforth-Objects/mdca-obj.fs
 require ./Gforth-Objects/double-linked-list.fs
 require ./piecelevel.fs
 
-16 2 2 multi-cell-array heap-new constant solutionarray  ( apiecelevel , solutionindex )
+16 2 2 multi-cell-array heap-new constant solutionarray  \ ( apiecelevel , solutionindex )
+double-linked-list heap-new constant solutionslist
 
 : startsolutionarray ( uindex -- ) \ empty solutionarray from uindex to end of array
   16 swap do
@@ -101,8 +102,9 @@ aboard heap-new apiecelevel heap-new 0 0 solutionarray cell-array! \ place begin
   else true then ;
 
 0 value solutionmax
-5 value displayskip
+50 value displayskip
 0 value displaystep
+0 value solutions
 : displayit ( -- )
 displaystep 1 + to displaystep
 displaystep displayskip > solutionedge 15 >= or if
@@ -111,7 +113,8 @@ displaystep displayskip > solutionedge 15 >= or if
   0 5 at-xy solutionedge . ." pieces for current solution" cr
   solutionedge solutionmax max to solutionmax
   solutionmax . ." current max solutions found" cr
-  0 getcurrentlvlsolution# . ." how deep into first lvl"
+  0 getcurrentlvlsolution# . ." depth into first lvl" cr
+  solutions . ." current solutions"
 then ;
 
 : solveit ( -- )
@@ -129,4 +132,20 @@ then ;
     else
       backuplvl invert
     then
+  until ;
+
+: addsolution ( -- ) \ get current solution and add it to solutionslist
+  16 2 2 multi-cell-array heap-new \ ( npiece , nindex )
+  dup solutionslist ll-cell! \ store the array that will contain the pieces for solution
+  16 0 do
+    dup dup i getNpieceindex rot i 1 cell-array! swap i 0 cell-array!
+  loop drop \ need to remove the multi-cell-array object from stack
+  solutions 1 + to solutions ;
+
+: findanswers ( -- ) \ find all solutions
+  begin
+    solveit
+    solutionedge 15 >= if \ found a solution add it
+      addsolution then
+    backuplvl invert
   until ;
