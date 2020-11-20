@@ -135,11 +135,11 @@ then ;
   until ;
 
 : addsolution ( -- ) \ get current solution and add it to solutionslist
-  16 2 2 multi-cell-array heap-new \ ( npiece , nindex )
-  dup solutionslist ll-cell! \ store the array that will contain the pieces for solution
+  16 2 2 multi-cell-array heap-new { ustorage } \ ( npiece , nindex )
+  ustorage solutionslist ll-cell! \ store the array that will contain the pieces for solution
   16 0 do
-    dup dup i getNpieceindex rot i 1 cell-array! swap i 0 cell-array!
-  loop drop \ need to remove the multi-cell-array object from stack
+    i getNpieceindex i 1 ustorage cell-array! i 0 ustorage cell-array!
+  loop
   solutions 1 + to solutions ;
 
 : findanswers ( -- ) \ find all solutions
