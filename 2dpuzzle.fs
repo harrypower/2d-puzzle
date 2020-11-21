@@ -139,14 +139,12 @@ then ;
   16 0 do
     j 0 um1 [bind] multi-cell-array cell-array@ to upiece
     j 1 um1 [bind] multi-cell-array cell-array@ to uindex
-    j . upiece . uindex . cr
     16 0 do
       i . um2 . cr
-      i 0 um2 [bind] multi-cell-array cell-array@ upiece =
-      if i 1 um2 [bind] multi-cell-array cell-array@ uindex = if true to nflag leave then then
+    \  i 0 um2 [bind] multi-cell-array cell-array@ upiece =
+    \  if i 1 um2 [bind] multi-cell-array cell-array@ uindex = if true to nflag leave then then
     loop
-    nflag . cr
-    nflag if j 15 = if true to nflag leave else false to nflag then else false to nflag leave then
+    \ nflag if j 15 = if true to nflag leave else false to nflag then else false to nflag leave then
   loop nflag ;
 : addsolution ( -- ) \ get current solution and add it to solutionslist
   16 2 2 multi-cell-array heap-new true { ustorage nflag } \ ( npiece , nindex ) < this will be how the solution data is stored in array
