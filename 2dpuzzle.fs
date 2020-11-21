@@ -137,8 +137,8 @@ then ;
 \ nflag true if umulticellarray1 contains umulticellarray2 ... nflag is  false if umulticellarray1 is different then umulticellarray2
   0 0 false { um1 um2 upiece uindex nflag }
   16 0 do
-    j 0 um1 cell-array@ to upiece
-    j 1 um1 cell-array@ to uindex
+    j 0 um1 [bind] multi-cell-array cell-array@ to upiece
+    j 1 um1 [bind] multi-cell-array cell-array@ to uindex
     j . upiece . uindex . cr
     16 0 do
       i . um2 . cr
