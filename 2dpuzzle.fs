@@ -141,7 +141,8 @@ then ;
     i 1 um1 [bind] multi-cell-array cell-array@ to uindex
     16 0 do
       i 0 um2 [bind] multi-cell-array cell-array@ upiece =
-      if i 1 um2 [bind] multi-cell-array cell-array@ uindex = if true to nflag leave then then
+      i 1 um2 [bind] multi-cell-array cell-array@ uindex = and
+      if true to nflag leave then
     loop
     nflag if i 15 = if true to nflag leave else false to nflag then else false to nflag leave then
   loop nflag ;
