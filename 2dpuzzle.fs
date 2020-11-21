@@ -137,14 +137,13 @@ then ;
 \ nflag true if umulticellarray1 contains umulticellarray2 ... nflag is  false if umulticellarray1 is different then umulticellarray2
   0 0 false { um1 um2 upiece uindex nflag }
   16 0 do
-    j 0 um1 [bind] multi-cell-array cell-array@ to upiece
-    j 1 um1 [bind] multi-cell-array cell-array@ to uindex
+    i 0 um1 [bind] multi-cell-array cell-array@ to upiece
+    i 1 um1 [bind] multi-cell-array cell-array@ to uindex
     16 0 do
-      i . um2 . cr
-    \  i 0 um2 [bind] multi-cell-array cell-array@ upiece =
-    \  if i 1 um2 [bind] multi-cell-array cell-array@ uindex = if true to nflag leave then then
+      i 0 um2 [bind] multi-cell-array cell-array@ upiece =
+      if i 1 um2 [bind] multi-cell-array cell-array@ uindex = if true to nflag leave then then
     loop
-    \ nflag if j 15 = if true to nflag leave else false to nflag then else false to nflag leave then
+    nflag if i 15 = if true to nflag leave else false to nflag then else false to nflag leave then
   loop nflag ;
 : addsolution ( -- ) \ get current solution and add it to solutionslist
   16 2 2 multi-cell-array heap-new true { ustorage nflag } \ ( npiece , nindex ) < this will be how the solution data is stored in array
