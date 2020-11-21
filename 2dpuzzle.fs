@@ -112,7 +112,7 @@ displaystep displayskip > solutionedge 15 >= or if
   0 0 page solutionedge getNboard displayboard
   0 5 at-xy solutionedge . ." pieces for current solution" cr
   solutionedge solutionmax max to solutionmax
-  solutionmax . ." current max solutions found" cr
+  solutionmax . ." current max lvls found" cr
   0 getcurrentlvlsolution# . ." depth into first lvl" cr
   solutions . ." current solutions"
 then ;
@@ -157,7 +157,7 @@ then ;
       i solutionslist nll-cell@ ustorage addsolution? if \ not unique
         false to nflag \ not unique dont store
       else
-        nflag true or to nflag \ unique so store it 
+        nflag true or to nflag \ unique so store it
       then
     loop
   then
