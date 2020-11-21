@@ -133,15 +133,35 @@ then ;
       backuplvl invert
     then
   until ;
-
+: addsolution? ( umulticellarray1 umulticellarray2 -- nflag ) \ test if umulticellarray1 includes umulticellarray2
+\ nflag true if umulticellarray1 contains umulticellarray2 ... nflag is  false if umulticellarray1 is different then umulticellarray2
+  0 0 false { um1 um2 upiece uindex nflag }
+  16 0 do
+    j 0 um1 cell-array@ to upiece
+    j 1 um1 cell-array@ to uindex
+    16 0 do
+      i 0 um2 cell-array@ upiece = if i 1 um2 cell-array@ uindex = if true to nflag leave then then
+    loop
+    nflag if j 15 = if true to nflag leave else false to nflag then else false to nflag leave then 
+  loop nflag ;
 : addsolution ( -- ) \ get current solution and add it to solutionslist
-  16 2 2 multi-cell-array heap-new { ustorage } \ ( npiece , nindex ) < this will be how the solution data is stored in array
-  ustorage solutionslist ll-cell! \ store the array that will contain the pieces for solution
+  16 2 2 multi-cell-array heap-new false { ustorage nflag } \ ( npiece , nindex ) < this will be how the solution data is stored in array
   16 0 do true i 0 ustorage cell-array! true i 1 ustorage cell-array! loop \ empty solution list first
   solutionedge 1 + 0 ?do
     i getNpieceindex i 1 ustorage cell-array! i 0 ustorage cell-array!
   loop
-  solutions 1 + to solutions ;
+  solutionslist ll-size@ 0 ?do
+    i solutionslist nll-cell@ ustorage addsolution? false = if \ different solution found so set flag to possibly store it
+      true to nflag
+    else
+      false to nflag \ no match found
+    then
+  loop
+  nflag false = if ustorage [bind] multi-cell-array destruct \ destruct ustorage because match found so not stored
+  else
+    ustorage solutionslist ll-cell! \ store the array that will contain the pieces for solution because unique solution found
+    solutions 1 + to solutions
+  then ;
 
 : findanswers ( -- ) \ find all solutions
   begin
