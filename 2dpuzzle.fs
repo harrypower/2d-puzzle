@@ -135,6 +135,7 @@ then ;
   until ;
 : addsolution? ( umulticellarray1 umulticellarray2 -- nflag ) \ test if umulticellarray1 includes umulticellarray2
 \ nflag true if umulticellarray1 contains umulticellarray2 ... nflag is  false if umulticellarray1 is different then umulticellarray2
+  .s cr 
   0 0 false { um1 um2 upiece uindex nflag }
   16 0 do
     j 0 um1 cell-array@ to upiece
