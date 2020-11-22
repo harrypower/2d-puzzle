@@ -168,11 +168,27 @@ then ;
     ustorage solutionslist ll-cell! \ store the array that will contain the pieces for solution because unique solution found
     solutions 1 + to solutions
   then ;
-
+0 value solutioncombinations
 : findanswers ( -- ) \ find all solutions
   begin
     solveit
     solutionedge 15 >= if \ found a solution add it
-      addsolution then
+      addsolution solutioncombinations 1 + to solutioncombinations then
     backuplvl invert
   until ;
+
+: finalsolution ( -- )
+  0 solutionslist nll-cell@
+  aboard heap-new { umca uaboard }
+  16 0 do i 0 umca cell-array@ i 1 umca cell-array@ uaboard boardput drop loop
+  0 5 uaboard displayboard cr
+  ." #   piece#   board location " cr
+  16 0 do i . i 0 umca cell-array@ . i 1 umca cell-array@ cr loop ;
+
+: main ( -- )
+  findanswers
+  page 0 0 at-xy
+  solutioncombinations . ." total combinations that solve puzzle!" cr
+  solutionslist ll-size@ . ." total solutions!" cr
+  ." When solved board looks as follows" cr
+  finalsolution ;
