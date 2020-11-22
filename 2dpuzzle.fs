@@ -183,7 +183,7 @@ then ;
   16 0 do i 0 umca cell-array@ i 1 umca cell-array@ uaboard boardput drop loop
   0 5 uaboard displayboard cr
   ." #   piece#   board location " cr
-  16 0 do i . i 0 umca cell-array@ . i 1 umca cell-array@ cr loop ;
+  16 0 do i . i 0 umca cell-array@ . i 1 umca cell-array@ . cr loop ;
 
 : main ( -- )
   findanswers
